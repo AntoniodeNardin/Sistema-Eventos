@@ -46,65 +46,50 @@ public class GerenciadorEventos {
     private void exibirMenuPrincipal(Scanner scanner) {
         int opcao;
         do {
-            System.out.println("\n=== SISTEMA DE EVENTOS DA CIDADE ===");
-            System.out.println("1 - Cadastrar Evento");
-            System.out.println("2 - Listar Todos os Eventos");
-            System.out.println("3 - Listar Eventos por Categoria");
-            System.out.println("4 - Confirmar Presença em Evento");
-            System.out.println("5 - Cancelar Presença em Evento");
-            System.out.println("6 - Meus Eventos Confirmados");
-            System.out.println("7 - Eventos Ocorrendo Agora");
-            System.out.println("8 - Eventos Já Realizados");
-            System.out.println("9 - Próximos Eventos");
-            System.out.println("0 - Sair");
+            mostrarMenu();
             System.out.print("Escolha uma opção: ");
-            
             opcao = readIntSafe(scanner);
 
-            switch (opcao) {
-                case 1: 
-                    cadastrarEvento(scanner); 
-                    break;
-                case 2: 
-                    listarTodosEventos(); 
-                    break;
-                case 3: 
-                    listarEventosPorCategoria(scanner); 
-                    break;
-                case 4: 
-                    confirmarPresenca(scanner); 
-                    break;
-                case 5: 
-                    cancelarPresenca(scanner); 
-                    break;
-                case 6: 
-                    listarMeusEventos(); 
-                    break;
-                case 7: 
-                    listarEventosOcorrendoAgora(); 
-                    break;
-                case 8: 
-                    listarEventosPassados(); 
-                    break;
-                case 9: 
-                    listarProximosEventos(); 
-                    break;
-                case 0: 
-                    FileManager.salvarEventos(eventos);
-                    System.out.println("Saindo do sistema...");
-                    break;
-                default: 
-                    System.out.println("Opção inválida!");
-            }
+            executarOpcao(opcao, scanner);
 
-            if (opcao != 0 && opcao != 2 && opcao != 6 && opcao != 7 && opcao != 8 && opcao != 9) {
-                System.out.println("\nPressione Enter para continuar...");
-                scanner.nextLine();
-            } else if (opcao != 0) {
+            if (opcao != 0) {
                 System.out.println("\nPressione Enter para continuar...");
                 scanner.nextLine();
             }
         } while (opcao != 0);
+    }
+
+    private void mostrarMenu() {
+        System.out.println("\n=== SISTEMA DE EVENTOS DA CIDADE ===");
+        System.out.println("1 - Cadastrar Evento");
+        System.out.println("2 - Listar Todos os Eventos");
+        System.out.println("3 - Listar Eventos por Categoria");
+        System.out.println("4 - Confirmar Presença em Evento");
+        System.out.println("5 - Cancelar Presença em Evento");
+        System.out.println("6 - Meus Eventos Confirmados");
+        System.out.println("7 - Eventos Ocorrendo Agora");
+        System.out.println("8 - Eventos Já Realizados");
+        System.out.println("9 - Próximos Eventos");
+        System.out.println("0 - Sair");
+    }
+
+    private void executarOpcao(int opcao, Scanner scanner) {
+        switch (opcao) {
+            case 1 -> cadastrarEvento(scanner);
+            case 2 -> listarTodosEventos();
+            case 3 -> listarEventosPorCategoria(scanner);
+            case 4 -> confirmarPresenca(scanner);
+            case 5 -> cancelarPresenca(scanner);
+            case 6 -> listarMeusEventos();
+            case 7 -> listarEventosOcorrendoAgora();
+            case 8 -> listarEventosPassados();
+            case 9 -> listarProximosEventos();
+            case 0 -> {
+                FileManager.salvarEventos(eventos);
+                System.out.println("Saindo do sistema...");
+            }
+            default -> System.out.println("Opção inválida!");
+        }
     }
 
     private void cadastrarEvento(Scanner scanner) {
@@ -116,33 +101,31 @@ public class GerenciadorEventos {
             System.out.println("Já existe um evento com este nome!");
             return;
         }
-        
+
         System.out.print("Endereço: ");
         String endereco = scanner.nextLine();
-        
+
         Categoria.listarCategorias();
         System.out.print("Selecione a categoria (número): ");
         Categoria categoria = Categoria.selecionarCategoria(readIntSafe(scanner));
         scanner.nextLine();
-        
+
         if (categoria == null) {
             System.out.println("Categoria inválida!");
             return;
         }
-        
+
         System.out.print("Descrição: ");
         String descricao = scanner.nextLine();
-        
+
         System.out.print("Data e hora (dd/MM/yyyy HH:mm): ");
         LocalDateTime horario = lerDataHora(scanner);
-        
+
         System.out.print("Duração em horas: ");
         int duracao = readIntSafe(scanner);
         scanner.nextLine();
 
         Evento novoEvento = new Evento(nome, endereco, categoria, horario, descricao, duracao);
-        
-        
 
         eventos.add(novoEvento);
         System.out.println("Evento '" + nome + "' cadastrado com sucesso!");
@@ -172,22 +155,22 @@ public class GerenciadorEventos {
         System.out.print("Selecione a categoria (número): ");
         Categoria categoria = Categoria.selecionarCategoria(readIntSafe(scanner));
         scanner.nextLine();
-        
+
         if (categoria == null) {
             System.out.println("Categoria inválida!");
             return;
         }
-        
+
         System.out.println("\n=== EVENTOS DA CATEGORIA: " + categoria.getDescricao() + " ===");
         boolean encontrado = false;
-        
+
         for (Evento evento : eventos) {
             if (evento.getCategoria() == categoria) {
                 System.out.println(evento);
                 encontrado = true;
             }
         }
-        
+
         if (!encontrado) {
             System.out.println("Nenhum evento encontrado nesta categoria.");
         }
@@ -197,13 +180,13 @@ public class GerenciadorEventos {
         System.out.println("\n=== CONFIRMAR PRESENÇA ===");
         System.out.print("Nome do evento: ");
         String nomeEvento = scanner.nextLine();
-        
+
         Evento evento = buscarEventoPorNome(nomeEvento);
         if (evento == null) {
             System.out.println("Evento não encontrado!");
             return;
         }
-        
+
         if (evento.isConfirmado(usuarioLogado.getNome())) {
             System.out.println("Você já confirmou presença neste evento.");
         } else {
@@ -216,13 +199,13 @@ public class GerenciadorEventos {
         System.out.println("\n=== CANCELAR PRESENÇA ===");
         System.out.print("Nome do evento: ");
         String nomeEvento = scanner.nextLine();
-        
+
         Evento evento = buscarEventoPorNome(nomeEvento);
         if (evento == null) {
             System.out.println("Evento não encontrado!");
             return;
         }
-        
+
         if (!evento.isConfirmado(usuarioLogado.getNome())) {
             System.out.println("Você não tinha confirmado presença neste evento.");
         } else {
@@ -234,14 +217,14 @@ public class GerenciadorEventos {
     private void listarMeusEventos() {
         System.out.println("\n=== MEUS EVENTOS CONFIRMADOS ===");
         boolean encontrado = false;
-        
+
         for (Evento evento : eventos) {
             if (evento.isConfirmado(usuarioLogado.getNome())) {
                 System.out.println(evento);
                 encontrado = true;
             }
         }
-        
+
         if (!encontrado) {
             System.out.println("Você não confirmou presença em nenhum evento.");
         }
@@ -250,14 +233,14 @@ public class GerenciadorEventos {
     private void listarEventosOcorrendoAgora() {
         System.out.println("\n=== EVENTOS OCORRENDO AGORA ===");
         boolean encontrado = false;
-        
+
         for (Evento evento : eventos) {
             if (evento.estaOcorrendo()) {
                 System.out.println(evento);
                 encontrado = true;
             }
         }
-        
+
         if (!encontrado) {
             System.out.println("Nenhum evento ocorrendo no momento.");
         }
@@ -266,14 +249,14 @@ public class GerenciadorEventos {
     private void listarEventosPassados() {
         System.out.println("\n=== EVENTOS JÁ REALIZADOS ===");
         boolean encontrado = false;
-        
+
         for (Evento evento : eventos) {
             if (evento.jaOcorreu()) {
                 System.out.println(evento);
                 encontrado = true;
             }
         }
-        
+
         if (!encontrado) {
             System.out.println("Nenhum evento realizado ainda.");
         }
@@ -282,14 +265,14 @@ public class GerenciadorEventos {
     private void listarProximosEventos() {
         System.out.println("\n=== PRÓXIMOS EVENTOS ===");
         boolean encontrado = false;
-        
+
         for (Evento evento : eventos) {
             if (evento.estaPorVir()) {
                 System.out.println(evento);
                 encontrado = true;
             }
         }
-        
+
         if (!encontrado) {
             System.out.println("Nenhum evento programado para o futuro.");
         }
