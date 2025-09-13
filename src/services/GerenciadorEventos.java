@@ -29,40 +29,50 @@ public class GerenciadorEventos {
     private void cadastrarUsuario(Scanner scanner) {
         System.out.println("\n=== CADASTRO DE USUÁRIO ===");
 
-        System.out.print("Nome: ");
-        String nome = scanner.nextLine().trim();
-        if (nome.isEmpty()) {
-            System.out.println("Nome não pode ser vazio!");
-            return;
-        }
+        String nome;
+        do {
+            System.out.print("Nome: ");
+            nome = scanner.nextLine().trim();
+            if (nome.isEmpty()) {
+                System.out.println("Nome não pode ser vazio!");
+            }
+        } while (nome.isEmpty());
 
-        System.out.print("Email: ");
-        String email = scanner.nextLine().trim();
-        if (!email.contains("@") || email.length() < 5) {
-            System.out.println("Email inválido!");
-            return;
-        }
+        String email;
+        do {
+            System.out.print("Email: ");
+            email = scanner.nextLine().trim();
+            if (!email.contains("@") || email.length() < 5) {
+                System.out.println("Email inválido! Digite novamente.");
+            }
+        } while (!email.contains("@") || email.length() < 5);
 
-        System.out.print("Idade: ");
-        int idade = readIntSafe(scanner);
-        if (idade <= 0 || idade > 120) {
-            System.out.println("Idade inválida!");
-            return;
-        }
+        int idade;
+        do {
+            System.out.print("Idade: ");
+            idade = readIntSafe(scanner);
+            if (idade <= 0 || idade > 120) {
+                System.out.println("Idade inválida! Digite novamente.");
+            }
+        } while (idade <= 0 || idade > 120);
 
-        System.out.print("Telefone: ");
-        String telefone = scanner.nextLine().trim();
-        if (telefone.isEmpty() || telefone.length() < 8) {
-            System.out.println("Telefone inválido!");
-            return;
-        }
+        String telefone;
+        do {
+            System.out.print("Telefone: ");
+            telefone = scanner.nextLine().trim();
+            if (telefone.isEmpty() || telefone.length() < 8) {
+                System.out.println("Telefone inválido! Digite novamente.");
+            }
+        } while (telefone.isEmpty() || telefone.length() < 8);
 
-        System.out.print("Cidade: ");
-        String cidade = scanner.nextLine().trim();
-        if (cidade.isEmpty()) {
-            System.out.println("Cidade não pode ser vazia!");
-            return;
-        }
+        String cidade;
+        do {
+            System.out.print("Cidade: ");
+            cidade = scanner.nextLine().trim();
+            if (cidade.isEmpty()) {
+                System.out.println("Cidade não pode ser vazia!");
+            }
+        } while (cidade.isEmpty());
 
         usuarioLogado = new Usuario(nome, email, idade, telefone, cidade);
         System.out.println("Usuário cadastrado com sucesso: " + usuarioLogado);
