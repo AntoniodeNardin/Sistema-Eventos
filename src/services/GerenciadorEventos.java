@@ -111,6 +111,11 @@ public class GerenciadorEventos {
         System.out.println("\n=== CADASTRO DE EVENTO ===");
         System.out.print("Nome do evento: ");
         String nome = scanner.nextLine();
+
+        if (buscarEventoPorNome(nome) != null) {
+            System.out.println("Já existe um evento com este nome!");
+            return;
+        }
         
         System.out.print("Endereço: ");
         String endereco = scanner.nextLine();
@@ -137,10 +142,7 @@ public class GerenciadorEventos {
 
         Evento novoEvento = new Evento(nome, endereco, categoria, horario, descricao, duracao);
         
-        if (buscarEventoPorNome(nome) != null) {
-            System.out.println("Já existe um evento com este nome!");
-            return;
-        }
+        
 
         eventos.add(novoEvento);
         System.out.println("Evento '" + nome + "' cadastrado com sucesso!");
