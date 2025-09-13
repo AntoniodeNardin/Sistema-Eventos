@@ -28,19 +28,44 @@ public class GerenciadorEventos {
 
     private void cadastrarUsuario(Scanner scanner) {
         System.out.println("\n=== CADASTRO DE USUÁRIO ===");
+
         System.out.print("Nome: ");
-        String nome = scanner.nextLine();
+        String nome = scanner.nextLine().trim();
+        if (nome.isEmpty()) {
+            System.out.println("Nome não pode ser vazio!");
+            return;
+        }
+
         System.out.print("Email: ");
-        String email = scanner.nextLine();
+        String email = scanner.nextLine().trim();
+        if (!email.contains("@") || email.length() < 5) {
+            System.out.println("Email inválido!");
+            return;
+        }
+
         System.out.print("Idade: ");
         int idade = readIntSafe(scanner);
+        if (idade <= 0 || idade > 120) {
+            System.out.println("Idade inválida!");
+            return;
+        }
+
         System.out.print("Telefone: ");
-        String telefone = scanner.nextLine();
+        String telefone = scanner.nextLine().trim();
+        if (telefone.isEmpty() || telefone.length() < 8) {
+            System.out.println("Telefone inválido!");
+            return;
+        }
+
         System.out.print("Cidade: ");
-        String cidade = scanner.nextLine();
+        String cidade = scanner.nextLine().trim();
+        if (cidade.isEmpty()) {
+            System.out.println("Cidade não pode ser vazia!");
+            return;
+        }
 
         usuarioLogado = new Usuario(nome, email, idade, telefone, cidade);
-        System.out.println("Usuário cadastrado: " + usuarioLogado);
+        System.out.println("Usuário cadastrado com sucesso: " + usuarioLogado);
     }
 
     private void exibirMenuPrincipal(Scanner scanner) {
